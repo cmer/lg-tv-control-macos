@@ -1,4 +1,4 @@
-# lg-tv-control-mac
+# LG TV Control for macOS
 
 Automatically wake/sleep and change the input of your LG TV when used as a monitor on macOS.
 
