@@ -1,4 +1,4 @@
-# lg-tv-control-mac
+# LG TV Control for macOS
 
 Automatically wake/sleep and change the input of your LG TV when used as a monitor on macOS.
 
@@ -62,9 +62,14 @@ If everything is working as expected, your screen should turn off.
 ## Installing the Hammerspoon script
 
 1. Copy `lgtv.lua`from this repo to `~/.hammerspoon`
-2. Add `require "lgtv"` in `~/.hammerspoon/init.lua`
-3. Change
+2. Run the following
+```sh
+mkdir -p ~/.hammerspoon
+touch ~/.hammerspoon/init.lua
+echo "require \"lgtv\"" >> ~/.hammerspoon/init.lua
+```
+3. Change the HDMI input at the top of the Lua script, if needed.
 
 ## Special Thanks
 
-Thanks to @greyshi for extending upon my [initial Wake On LAN gist](https://gist.github.com/cmer/bd40d9da0055d257c5aab2e0143ee17b) and introducing LGWebOSRemote.
+Thanks to [@greyshi](https://github.com/greyshi) for extending upon my [initial Wake On LAN gist](https://gist.github.com/cmer/bd40d9da0055d257c5aab2e0143ee17b) and introducing LGWebOSRemote.
