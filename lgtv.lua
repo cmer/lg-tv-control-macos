@@ -5,6 +5,7 @@ local debug = false  -- If you run into issues, set to true to enable debug mess
 
 -- You likely will not need to change anything below this line
 local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
 local lgtv_cmd = lgtv_path.." "..tv_name.." "
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
@@ -55,8 +56,8 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
 
     -- This puts the TV in standby mode.
     -- For true "power off" use `off` instead of `screenOff`.
-    hs.execute(lgtv_cmd.." screenOff")
-    if debug then print("TV screen was turned off.") end
+    hs.execute(lgtv_cmd.." "..screen_off_command)
+    if debug then print("TV screen was turned off with command `"..screen_off_command.."`.") end
   end
 end)
 watcher:start()
