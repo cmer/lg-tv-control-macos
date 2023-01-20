@@ -63,7 +63,7 @@ If everything is working as expected, your screen should turn off.
 
 1. Copy `lgtv.lua`from this repo to `~/.hammerspoon`
 2. Add `require "lgtv"` in `~/.hammerspoon/init.lua`
-3. Change
+3. Change the HDMI input at the top of the Lua script, if needed.
 
 ## Special Thanks
 
