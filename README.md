@@ -72,4 +72,4 @@ echo "require \"lgtv\"" >> ~/.hammerspoon/init.lua
 
 ## Special Thanks
 
-Thanks to @greyshi for extending upon my [initial Wake On LAN gist](https://gist.github.com/cmer/bd40d9da0055d257c5aab2e0143ee17b) and introducing LGWebOSRemote.
+Thanks to [@greyshi](https://github.com/greyshi) for extending upon my [initial Wake On LAN gist](https://gist.github.com/cmer/bd40d9da0055d257c5aab2e0143ee17b) and introducing LGWebOSRemote.
