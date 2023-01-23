@@ -5,10 +5,41 @@ local debug = false  -- If you run into issues, set to true to enable debug mess
 
 -- You likely will not need to change anything below this line
 local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
 local lgtv_cmd = lgtv_path.." "..tv_name.." "
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
+
+function lgtv_current_app_id()
+  local foreground_app_info = hs.execute(lgtv_cmd.." getForegroundAppInfo")
+  foreground_app_info = string.match(foreground_app_info, '^%b{}')
+  foreground_app_info = hs.json.decode(foreground_app_info)
+  return foreground_app_info["payload"]["appId"]
+end
+
+function tv_is_connected()
+  for i, v in ipairs(connected_tv_identifiers) do
+    if hs.screen.find(v) ~= nil then
+      return true
+    end
+  end
+
+  return false
+end
+
+function dump_table(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    for k,v in pairs(o) do
+      if type(k) ~= 'number' then k = '"'..k..'"' end
+      s = s .. '['..k..'] = ' .. dump_table(v) .. ','
+    end
+    return s .. '} '
+  else
+    return tostring(o)
+  end
+end
 
 if debug then
   print ("TV name: "..tv_name)
@@ -20,17 +51,17 @@ if debug then
   print (hs.execute(lgtv_cmd.."swInfo"))
   print ("Running `"..lgtv_cmd.."getForegroundAppInfo`...")
   print (hs.execute(lgtv_cmd.."getForegroundAppInfo"))
-end
-
-function lgtv_current_app_id()
-  local foreground_app_info = hs.execute(lgtv_cmd.." getForegroundAppInfo")
-  foreground_app_info = string.match(foreground_app_info, '^%b{}')
-  foreground_app_info = hs.json.decode(foreground_app_info)
-  return foreground_app_info["payload"]["appId"]
+  print("Connected screens: "..dump_table(hs.screen.allScreens()))
+  print("TV is connected? "..tostring(tv_is_connected()))
 end
 
 watcher = hs.caffeinate.watcher.new(function(eventType)
   if debug then print("Received event: "..eventType) end
+
+  if not tv_is_connected() then
+    if debug then print("TV is not connected. Skipping.") end
+    return
+  end
 
   if (eventType == hs.caffeinate.watcher.screensDidWake or
       eventType == hs.caffeinate.watcher.systemDidWake or
