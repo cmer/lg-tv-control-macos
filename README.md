@@ -8,7 +8,7 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 - [Hammerspoon](https://www.hammerspoon.org/)
 - Python 3
-- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote)
+- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-01-27 or newer)
 
 ### Installing Requirements
 
@@ -26,7 +26,7 @@ brew install --cask hammerspoon
 # You can skip this if you already have Python installed and know what you're doing.
 brew install python
 
-# Then install LGWebRemote...
+# Then install LGWebRemote (version 2023-01-27 or newer)...
 mkdir -p ~/opt
 python -m venv ~/opt/lgtv
 cd ~/opt/lgtv
@@ -39,13 +39,13 @@ pip install git+https://github.com/klattimer/LGWebOSRemote
 By now, you should be able to run
 
 ```sh
-lgtv scan
+lgtv scan ssl
 ```
 
 and see some info about your TV. Grab your TV's IP address from the output. Then:
 
 ```sh
-lgtv auth <ip_address_here> MyTV
+lgtv auth <ip_address_here> MyTV ssl
 ```
 
 and follow the instructions on your TV.
@@ -53,8 +53,8 @@ and follow the instructions on your TV.
 Now, try the following:
 
 ```sh
-lgtv MyTV swInfo
-lgtv MyTV screenOff
+lgtv MyTV swInfo ssl
+lgtv MyTV screenOff ssl
 ```
 
 If everything is working as expected, your screen should turn off.
@@ -63,11 +63,13 @@ If everything is working as expected, your screen should turn off.
 
 1. Copy `lgtv.lua`from this repo to `~/.hammerspoon`
 2. Run the following
+
 ```sh
 mkdir -p ~/.hammerspoon
 touch ~/.hammerspoon/init.lua
 echo "require \"lgtv\"" >> ~/.hammerspoon/init.lua
 ```
+
 3. Change the HDMI input at the top of the Lua script, if needed.
 
 ## Special Thanks

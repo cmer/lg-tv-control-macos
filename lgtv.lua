@@ -8,11 +8,12 @@ local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
-local lgtv_cmd = lgtv_path.." "..tv_name.." "
+local lgtv_cmd = lgtv_path.." "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
+local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LGWebOSRemote version 2023-01-27 or newer.
 
 function lgtv_current_app_id()
-  local foreground_app_info = hs.execute(lgtv_cmd.." getForegroundAppInfo")
+  local foreground_app_info = exec_command("getForegroundAppInfo")
   foreground_app_info = string.match(foreground_app_info, '^%b{}')
   foreground_app_info = hs.json.decode(foreground_app_info)
   return foreground_app_info["payload"]["appId"]
@@ -41,16 +42,29 @@ function dump_table(o)
   end
 end
 
+function exec_command(command)
+  if lgtv_ssl then
+    command = command.." ssl"
+  end
+
+  command = lgtv_cmd.." "..command
+
+  if debug then
+    print("Executing command: "..command)
+  end
+
+  return hs.execute(command)
+end
+
 if debug then
   print ("TV name: "..tv_name)
   print ("TV input: "..tv_input)
   print ("LGTV path: "..lgtv_path)
   print ("LGTV command: "..lgtv_cmd)
+  print ("SSL: "..tostring(lgtv_ssl))
   print ("App ID: "..app_id)
-  print ("Running `"..lgtv_cmd.."swInfo`...")
-  print (hs.execute(lgtv_cmd.."swInfo"))
-  print ("Running `"..lgtv_cmd.."getForegroundAppInfo`...")
-  print (hs.execute(lgtv_cmd.."getForegroundAppInfo"))
+  print (exec_command("swInfo"))
+  print (exec_command("getForegroundAppInfo"))
   print("Connected screens: "..dump_table(hs.screen.allScreens()))
   print("TV is connected? "..tostring(tv_is_connected()))
 end
@@ -67,12 +81,12 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
       eventType == hs.caffeinate.watcher.systemDidWake or
       eventType == hs.caffeinate.watcher.screensDidUnlock) then
 
-    hs.execute(lgtv_cmd.." on") -- wake on lan
-    hs.execute(lgtv_cmd.." screenOn") -- turn on screen
+    exec_command("on") -- wake on lan
+    exec_command("screenOn") -- turn on screen
     if debug then print("TV was turned on") end
 
     if lgtv_current_app_id() ~= app_id and switch_input_on_wake then
-      hs.execute(lgtv_cmd.." startApp "..app_id)
+      exec_command("startApp "..app_id)
       if debug then print("TV input switched to "..app_id) end
     end
   end
@@ -87,7 +101,7 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
 
     -- This puts the TV in standby mode.
     -- For true "power off" use `off` instead of `screenOff`.
-    hs.execute(lgtv_cmd.." "..screen_off_command)
+    exec_command(screen_off_command)
     if debug then print("TV screen was turned off with command `"..screen_off_command.."`.") end
   end
 end)
