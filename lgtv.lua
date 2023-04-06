@@ -56,6 +56,10 @@ function exec_command(command)
   return hs.execute(command)
 end
 
+function lgtv_disabled()
+  return file_exists("./disable_lgtv")
+end
+
 if debug then
   print ("TV name: "..tv_name)
   print ("TV input: "..tv_input)
@@ -63,6 +67,7 @@ if debug then
   print ("LGTV command: "..lgtv_cmd)
   print ("SSL: "..tostring(lgtv_ssl))
   print ("App ID: "..app_id)
+  print("lgtv_disabled: "..tostring(lgtv_disabled()))
   print (exec_command("swInfo"))
   print (exec_command("getForegroundAppInfo"))
   print("Connected screens: "..dump_table(hs.screen.allScreens()))
@@ -70,10 +75,10 @@ if debug then
 end
 
 watcher = hs.caffeinate.watcher.new(function(eventType)
-  if debug then print("Received event: "..eventType) end
+  if debug then print("Received event: "..(eventType or "")) end
 
-  if not tv_is_connected() then
-    if debug then print("TV is not connected. Skipping.") end
+  if lgtv_disabled() then
+    if debug then print("LGTV feature disabled. Skipping.") end
     return
   end
 
@@ -91,8 +96,8 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
     end
   end
 
-  if (eventType == hs.caffeinate.watcher.screensDidSleep or
-      eventType == hs.caffeinate.watcher.systemWillPowerOff) then
+  if (tv_is_connected() and (eventType == hs.caffeinate.watcher.screensDidSleep or
+      eventType == hs.caffeinate.watcher.systemWillPowerOff)) then
 
     if lgtv_current_app_id() ~= app_id and prevent_sleep_when_using_other_input then
       if debug then print("TV is currently on another input ("..current_app_id.."). Skipping powering off.") end
