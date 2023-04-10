@@ -100,7 +100,7 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
       eventType == hs.caffeinate.watcher.systemWillPowerOff)) then
 
     if lgtv_current_app_id() ~= app_id and prevent_sleep_when_using_other_input then
-      if debug then print("TV is currently on another input ("..current_app_id.."). Skipping powering off.") end
+      if debug then print("TV is currently on another input ("..lgtv_current_app_id().."). Skipping powering off.") end
       return
     end
 
