@@ -17,9 +17,14 @@ local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LG
 
 function lgtv_current_app_id()
   local foreground_app_info = exec_command("getForegroundAppInfo")
-  foreground_app_info = string.match(foreground_app_info, '^%b{}')
-  foreground_app_info = hs.json.decode(foreground_app_info)
-  return foreground_app_info["payload"]["appId"]
+  for w in foreground_app_info:gmatch('%b{}') do
+    if w:match('\"response\"') then
+      local match = w:match('\"appId\"%s*:%s*\"([^\"]+)\"')
+      if match then
+        return match
+      end
+    end
+  end
 end
 
 function tv_is_connected()
