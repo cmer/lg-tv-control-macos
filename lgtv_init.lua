@@ -52,7 +52,13 @@ end
 
 function exec_command(command)
   if lgtv_ssl then
-    command = command.." ssl"
+    space_loc = command:find(" ")
+
+    if space_loc then
+      command = command:sub(1,space_loc).."ssl "..command:sub(space_loc+1)
+    else
+      command = command.." ssl"
+    end
   end
 
   command = lgtv_cmd.." "..command
@@ -62,10 +68,6 @@ function exec_command(command)
   end
 
   return hs.execute(command)
-end
-
-function lgtv_disabled()
-  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
 if debug then
