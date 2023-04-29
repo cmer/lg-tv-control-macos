@@ -64,8 +64,19 @@ function exec_command(command)
   return hs.execute(command)
 end
 
+-- Source: https://stackoverflow.com/a/4991602
+function file_exists(name)
+  local f=io.open(name,"r")
+  if f~=nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+end
+
 function lgtv_disabled()
-  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
+  return disable_lgtv or file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
 if debug then
