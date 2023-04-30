@@ -70,6 +70,10 @@ function exec_command(command)
   return hs.execute(command)
 end
 
+function lgtv_disabled()
+  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
+end
+
 if debug then
   print ("TV name: "..tv_name)
   print ("TV input: "..tv_input)
