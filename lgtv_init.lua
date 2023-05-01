@@ -54,6 +54,7 @@ function exec_command(command)
   if lgtv_ssl then
     space_loc = command:find(" ")
 
+    --- "ssl" must be the first argument for commands like 'startApp'. Advance it to the expected position.
     if space_loc then
       command = command:sub(1,space_loc).."ssl "..command:sub(space_loc+1)
     else
