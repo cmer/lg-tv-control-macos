@@ -1,50 +1,3 @@
-
-
--- -------------------------------------------------------------------
--- THIS SCRIPT IS CURRENTLY THE PREFERRED APPROACH --
--- Reference: https://github.com/cmer/lg-tv-control-macos/
--- LG OLED Settings (Reddit): https://www.reddit.com/r/Monitors/comments/wc9adk/guide_to_making_the_lg_c2_a_monitor_for_the_mac/
--- -------------------------------------------------------------------
--- 
--- -- Set up python, venv, lgtv package/bin, configure lgtv environment
--- $(which python3) -m venv ~/opt/lgtv
--- cd lgtv
--- source bin/activate
--- pip install git+https://github.com/klattimer/LGWebOSRemote
--- source ~/opt/lgtv/bin/activate 
--- 
--- -- After installation, you should be able to run and see some info about your TV.
--- lgtv scan ssl
--- 
--- -- Grab your TV's IP address from the output (or from the TV itself):
--- -- Issue this command then follow the prompts on your TV. 
--- lgtv auth <ip_address_here> <your_tv_name> ssl
--- lgtv auth 192.168.4.81 LGC1 ssl
--- 
--- -- If all went well, you should now be able to issue commands to your TV. 
--- 
--- -- Prints info to console
--- lgtv LGC1 swInfo ssl
--- 
--- -- Turns volume up 1 tick
--- lgtv LGC1 volumeUp
--- 
--- -- Turns volume down 1 tick
--- lgtv LGC1 volumeDown
--- 
--- -- Install the Hammerspoon script to allow Hammersoon to issue commands
--- -- on your behalf when certain macOS events occur. 
--- -- https://github.com/cmer/lg-tv-control-macos/#installing-the-hammerspoon-script
--- -- Hammerspoon works with MonitorControl to wake the tv like a monitor
--- -- control brightness, and (optionally) a second way to control volume with DDC.
--- -- Recommend not using DDC though.
--- 
--- -- Setinnput
--- lgtv LGC1 startApp com.webos.app.acrhdmi2 ssl
--- lgtv LGC1 startApp com.webos.app.hdmi2 ssl
--- lgtv LGC1 listInputs | jq
-
-
 local tv_input = "HDMI_2" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
@@ -62,7 +15,7 @@ local lgtv_cmd = lgtv_path.." "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
 local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LGWebOSRemote version 2023-01-27 or newer.
 
--- Prints the message (if `debug` is set). 
+-- A convenience function for printing debug messages. 
 function log_d(message)
   if debug then print(message) end
 end
@@ -128,7 +81,7 @@ function lgtv_disabled()
 end
 
 -- Converts an event_type (int) into a debug friendly description (string).
--- Source: https://github.com/Hammerspoon/hammerspoon/blob/master/extensions/caffeinate/libcaffeinate_watcher.m
+-- Source (look for `add_event_enum(lua_State* L)`): https://github.com/Hammerspoon/hammerspoon/blob/master/extensions/caffeinate/libcaffeinate_watcher.m
 function event_type_description(event_type)
   if event_type == hs.caffeinate.watcher.systemDidWake then
     return "systemDidWake"
