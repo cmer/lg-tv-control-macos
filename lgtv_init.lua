@@ -1,19 +1,71 @@
-local tv_input = "HDMI_1" -- Input to which your Mac is connected
+
+
+-- -------------------------------------------------------------------
+-- THIS SCRIPT IS CURRENTLY THE PREFERRED APPROACH --
+-- Reference: https://github.com/cmer/lg-tv-control-macos/
+-- LG OLED Settings (Reddit): https://www.reddit.com/r/Monitors/comments/wc9adk/guide_to_making_the_lg_c2_a_monitor_for_the_mac/
+-- -------------------------------------------------------------------
+-- 
+-- -- Set up python, venv, lgtv package/bin, configure lgtv environment
+-- $(which python3) -m venv ~/opt/lgtv
+-- cd lgtv
+-- source bin/activate
+-- pip install git+https://github.com/klattimer/LGWebOSRemote
+-- source ~/opt/lgtv/bin/activate 
+-- 
+-- -- After installation, you should be able to run and see some info about your TV.
+-- lgtv scan ssl
+-- 
+-- -- Grab your TV's IP address from the output (or from the TV itself):
+-- -- Issue this command then follow the prompts on your TV. 
+-- lgtv auth <ip_address_here> <your_tv_name> ssl
+-- lgtv auth 192.168.4.81 LGC1 ssl
+-- 
+-- -- If all went well, you should now be able to issue commands to your TV. 
+-- 
+-- -- Prints info to console
+-- lgtv LGC1 swInfo ssl
+-- 
+-- -- Turns volume up 1 tick
+-- lgtv LGC1 volumeUp
+-- 
+-- -- Turns volume down 1 tick
+-- lgtv LGC1 volumeDown
+-- 
+-- -- Install the Hammerspoon script to allow Hammersoon to issue commands
+-- -- on your behalf when certain macOS events occur. 
+-- -- https://github.com/cmer/lg-tv-control-macos/#installing-the-hammerspoon-script
+-- -- Hammerspoon works with MonitorControl to wake the tv like a monitor
+-- -- control brightness, and (optionally) a second way to control volume with DDC.
+-- -- Recommend not using DDC though.
+-- 
+-- -- Setinnput
+-- lgtv LGC1 startApp com.webos.app.acrhdmi2 ssl
+-- lgtv LGC1 startApp com.webos.app.hdmi2 ssl
+-- lgtv LGC1 listInputs | jq
+
+
+local tv_input = "HDMI_2" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
-local debug = false  -- If you run into issues, set to true to enable debug messages
+local debug = true  -- If you run into issues, set to true to enable debug messages
 local disable_lgtv = false
 -- NOTE: You can disable this script by setting the above variable to true, or by creating a file named
 -- `disable_lgtv` in the same directory as this file, or at ~/.disable_lgtv.
 
 -- You likely will not need to change anything below this line
-local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+local tv_name = "LGC1" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
 local lgtv_cmd = lgtv_path.." "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
 local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LGWebOSRemote version 2023-01-27 or newer.
+
+-- Prints the message (if `debug` is set). 
+function log_d(message)
+  if debug then print(message) end
+end
 
 function lgtv_current_app_id()
   local foreground_app_info = exec_command("getForegroundAppInfo")
@@ -63,68 +115,103 @@ function exec_command(command)
   end
 
   command = lgtv_cmd.." "..command
+  log_d("Executing command: "..command)
 
-  if debug then
-    print("Executing command: "..command)
-  end
+  response = hs.execute(command)
+  log_d(response)
 
-  return hs.execute(command)
+  return response
 end
 
 function lgtv_disabled()
   return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
-if debug then
-  print ("TV name: "..tv_name)
-  print ("TV input: "..tv_input)
-  print ("LGTV path: "..lgtv_path)
-  print ("LGTV command: "..lgtv_cmd)
-  print ("SSL: "..tostring(lgtv_ssl))
-  print ("App ID: "..app_id)
-  print("lgtv_disabled: "..tostring(lgtv_disabled()))
-  if not lgtv_disabled() then
-    print (exec_command("swInfo"))
-    print (exec_command("getForegroundAppInfo"))
-    print("Connected screens: "..dump_table(hs.screen.allScreens()))
-    print("TV is connected? "..tostring(tv_is_connected()))
+-- Converts an event_type (int) into a debug friendly description (string).
+-- Source: https://github.com/Hammerspoon/hammerspoon/blob/master/extensions/caffeinate/libcaffeinate_watcher.m
+function event_type_description(event_type)
+  if event_type == hs.caffeinate.watcher.systemDidWake then
+    return "systemDidWake"
+  elseif event_type == hs.caffeinate.watcher.willSleep then
+    return "willSleep"
+  elseif event_type == hs.caffeinate.watcher.willPowerOff then
+    return "willPowerOff"
+  elseif event_type == hs.caffeinate.watcher.screensDidSleep then
+    return "screensDidSleep"
+  elseif event_type == hs.caffeinate.watcher.sessionDidResignActive then
+    return "sessionDidResignActive"
+  elseif event_type == hs.caffeinate.watcher.sessionDidBecomeActive then
+    return "sessionDidBecomeActive"
+  elseif event_type == hs.caffeinate.watcher.screensaverDidStart then
+    return "screensaverDidStart"
+  elseif event_type == hs.caffeinate.watcher.screensaverWillStop then
+    return "screensaverWillStop"
+  elseif event_type == hs.caffeinate.watcher.screensaverDidStop then
+    return "screensaverDidStop"
+  elseif event_type == hs.caffeinate.watcher.screensDidLock then
+    return "screensDidLock"
+  elseif event_type == hs.caffeinate.watcher.screensDidUnlock then
+    return "screensDidUnlock"
+  else
+    return "unknown"
   end
 end
 
-watcher = hs.caffeinate.watcher.new(function(eventType)
-  if debug then print("Received event: "..(eventType or "")) end
+if debug then
+  log_d("TV name: "..tv_name)
+  log_d("TV input: "..tv_input)
+  log_d("LGTV path: "..lgtv_path)
+  log_d("LGTV command: "..lgtv_cmd)
+  log_d("SSL: "..tostring(lgtv_ssl))
+  log_d("App ID: "..app_id)
+  log_d("lgtv_disabled: "..tostring(lgtv_disabled()))
+  if not lgtv_disabled() then
+    exec_command("swInfo")
+    exec_command("getForegroundAppInfo")
+    log_d("Connected screens: "..dump_table(hs.screen.allScreens()))
+    log_d("TV is connected? "..tostring(tv_is_connected()))
+  end
+end
+
+watcher = hs.caffeinate.watcher.new(function(event_type)
+  event_name = event_type_description(event_type)
+  log_d("Received event: "..(event_type or "").." "..(event_name))
 
   if lgtv_disabled() then
-    if debug then print("LGTV feature disabled. Skipping.") end
+    log_d("LGTV feature disabled. Skipping.")
     return
   end
 
-  if (eventType == hs.caffeinate.watcher.screensDidWake or
-      eventType == hs.caffeinate.watcher.systemDidWake or
-      eventType == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() then
+  if (event_type == hs.caffeinate.watcher.screensDidWake or
+      event_type == hs.caffeinate.watcher.systemDidWake or
+      event_type == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() then
 
-    exec_command("on") -- wake on lan
-    exec_command("screenOn") -- turn on screen
-    if debug then print("TV was turned on") end
+    if screen_off_command == 'screenOff' then
+      exec_command("screenOn") -- turn on screen
+    else
+      exec_command("on") -- wake on lan
+    end
+    log_d("TV was turned on")
 
     if lgtv_current_app_id() ~= app_id and switch_input_on_wake then
       exec_command("startApp "..app_id)
-      if debug then print("TV input switched to "..app_id) end
+      log_d("TV input switched to "..app_id)
     end
   end
 
-  if (tv_is_connected() and (eventType == hs.caffeinate.watcher.screensDidSleep or
-      eventType == hs.caffeinate.watcher.systemWillPowerOff) and not lgtv_disabled()) then
+  if (tv_is_connected() and 
+    (event_type == hs.caffeinate.watcher.screensDidSleep or event_type == hs.caffeinate.watcher.systemWillPowerOff) and 
+    not lgtv_disabled()) then
 
     if lgtv_current_app_id() ~= app_id and prevent_sleep_when_using_other_input then
-      if debug then print("TV is currently on another input ("..lgtv_current_app_id().."). Skipping powering off.") end
+      log_d("TV is currently on another input ("..lgtv_current_app_id().."). Skipping powering off.")
       return
     end
 
     -- This puts the TV in standby mode.
     -- For true "power off" use `off` instead of `screenOff`.
     exec_command(screen_off_command)
-    if debug then print("TV screen was turned off with command `"..screen_off_command.."`.") end
+    log_d("TV screen was turned off with command `"..screen_off_command.."`.")
   end
 end)
 watcher:start()
