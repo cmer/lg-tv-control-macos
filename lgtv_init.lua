@@ -1,7 +1,7 @@
 local tv_input = "HDMI_1" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
-local debug = true  -- If you run into issues, set to true to enable debug messages
+local debug = false  -- If you run into issues, set to true to enable debug messages
 local disable_lgtv = false
 -- NOTE: You can disable this script by setting the above variable to true, or by creating a file named
 -- `disable_lgtv` in the same directory as this file, or at ~/.disable_lgtv.
@@ -76,8 +76,19 @@ function exec_command(command)
   return response
 end
 
+-- Source: https://stackoverflow.com/a/4991602
+function file_exists(name)
+  local f=io.open(name,"r")
+  if f~=nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+end
+
 function lgtv_disabled()
-  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
+  return disable_lgtv or file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
 -- Converts an event_type (int) into a debug friendly description (string).
