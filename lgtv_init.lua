@@ -85,12 +85,14 @@ end
 function event_type_description(event_type)
   if event_type == hs.caffeinate.watcher.systemDidWake then
     return "systemDidWake"
-  elseif event_type == hs.caffeinate.watcher.willSleep then
-    return "willSleep"
-  elseif event_type == hs.caffeinate.watcher.willPowerOff then
-    return "willPowerOff"
+  elseif event_type == hs.caffeinate.watcher.systemWillSleep then
+    return "systemWillSleep"
+  elseif event_type == hs.caffeinate.watcher.systemWillPowerOff then
+    return "systemWillPowerOff"
   elseif event_type == hs.caffeinate.watcher.screensDidSleep then
     return "screensDidSleep"
+  elseif event_type == hs.caffeinate.watcher.screensDidWake then
+    return "screensDidWake"
   elseif event_type == hs.caffeinate.watcher.sessionDidResignActive then
     return "sessionDidResignActive"
   elseif event_type == hs.caffeinate.watcher.sessionDidBecomeActive then
