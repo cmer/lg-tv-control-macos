@@ -52,7 +52,14 @@ end
 
 function exec_command(command)
   if lgtv_ssl then
-    command = command.." ssl"
+    space_loc = command:find(" ")
+
+    --- "ssl" must be the first argument for commands like 'startApp'. Advance it to the expected position.
+    if space_loc then
+      command = command:sub(1,space_loc).."ssl "..command:sub(space_loc+1)
+    else
+      command = command.." ssl"
+    end
   end
 
   command = lgtv_cmd.." "..command
@@ -64,19 +71,8 @@ function exec_command(command)
   return hs.execute(command)
 end
 
--- Source: https://stackoverflow.com/a/4991602
-function file_exists(name)
-  local f=io.open(name,"r")
-  if f~=nil then
-    io.close(f)
-    return true
-  else
-    return false
-  end
-end
-
 function lgtv_disabled()
-  return disable_lgtv or file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
+  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
 if debug then
