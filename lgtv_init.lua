@@ -1,13 +1,14 @@
-local tv_input = "HDMI_1" -- Input to which your Mac is connected
+local tv_input = "HDMI_2" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
-local debug = false  -- If you run into issues, set to true to enable debug messages
+local debug = true  -- If you run into issues, set to true to enable debug messages
 local disable_lgtv = false
 -- NOTE: You can disable this script by setting the above variable to true, or by creating a file named
 -- `disable_lgtv` in the same directory as this file, or at ~/.disable_lgtv.
 
 -- You likely will not need to change anything below this line
-local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+-- local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+local tv_name = "LGC1" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
