@@ -34,8 +34,6 @@ end
 
 function tv_is_connected()
   for i, v in ipairs(connected_tv_identifiers) do
-    log_d("i: "..i)
-    log_d("v: "..v)
     if hs.screen.find(v) ~= nil then
       log_d(v.." is connected")
       return true
