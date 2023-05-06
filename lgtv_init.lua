@@ -150,7 +150,12 @@ watcher = hs.caffeinate.watcher.new(function(event_type)
 
   if (event_type == hs.caffeinate.watcher.screensDidWake or
       event_type == hs.caffeinate.watcher.systemDidWake or
-      event_type == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() then
+      event_type == hs.caffeinate.watcher.screensDidUnlock) then
+
+    if not tv_is_connected()
+      log_d("TV screen was not turned on because it is not connected")
+      return 
+    end
 
     if screen_off_command == 'screenOff' then
       exec_command("screenOn") -- turn on screen
@@ -165,11 +170,16 @@ watcher = hs.caffeinate.watcher.new(function(event_type)
     end
   end
 
-  if (tv_is_connected() and (eventType == hs.caffeinate.watcher.screensDidSleep or
-      eventType == hs.caffeinate.watcher.systemWillPowerOff) and not lgtv_disabled()) then
+  if (event_type == hs.caffeinate.watcher.screensDidSleep or
+      event_type == hs.caffeinate.watcher.systemWillPowerOff) then
+    if not tv_is_connected()
+      log_d("TV screen was not turned off because it is not connected")
+      return 
+    end
 
-    if lgtv_current_app_id() ~= app_id and prevent_sleep_when_using_other_input then
-      log_d("TV is currently on another input ("..lgtv_current_app_id().."). Skipping powering off.")
+    current_app_id = lgtv_current_app_id()
+    if current_app_id ~= app_id and prevent_sleep_when_using_other_input then
+      log_d("TV is currently on another input ("..(current_app_id or "?").."). Skipping powering off.")
       return
     end
 
