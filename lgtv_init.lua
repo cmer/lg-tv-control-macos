@@ -34,12 +34,18 @@ function lgtv_current_app_id()
 end
 
 function tv_is_connected()
+  -- log_d("connected_tv_identifiers: "..connected_tv_identifiers)
+  -- log_d("Executing command: "..command)
   for i, v in ipairs(connected_tv_identifiers) do
+    log_d("i: "..i)
+    log_d("v: "..v)
     if hs.screen.find(v) ~= nil then
+      log_d(v.." is connected")
       return true
     end
   end
 
+  log_d("No screens are connected")
   return false
 end
 
@@ -140,44 +146,61 @@ if debug then
   end
 end
 
-watcher = hs.caffeinate.watcher.new(function(event_type)
-  event_name = event_type_description(event_type)
-  log_d("Received event: "..(event_type or "").." "..(event_name))
+watcher = hs.caffeinate.watcher.new(
+  function(event_type)
+    event_name = event_type_description(event_type)
+    log_d("Received event: "..(event_type or "").." "..(event_name))
 
-  if lgtv_disabled() then
-    log_d("LGTV feature disabled. Skipping.")
-    return
-  end
-
-  if (event_type == hs.caffeinate.watcher.screensDidWake or
-      event_type == hs.caffeinate.watcher.systemDidWake or
-      event_type == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() then
-
-    if screen_off_command == 'screenOff' then
-      exec_command("screenOn") -- turn on screen
-    else
-      exec_command("on") -- wake on lan
-    end
-    log_d("TV was turned on")
-
-    if lgtv_current_app_id() ~= app_id and switch_input_on_wake then
-      exec_command("startApp "..app_id)
-      log_d("TV input switched to "..app_id)
-    end
-  end
-
-  if (tv_is_connected() and (eventType == hs.caffeinate.watcher.screensDidSleep or
-      eventType == hs.caffeinate.watcher.systemWillPowerOff) and not lgtv_disabled()) then
-
-    if lgtv_current_app_id() ~= app_id and prevent_sleep_when_using_other_input then
-      log_d("TV is currently on another input ("..lgtv_current_app_id().."). Skipping powering off.")
+    if lgtv_disabled() then
+      log_d("LGTV feature disabled. Skipping.")
       return
     end
 
-    -- This puts the TV in standby mode.
-    -- For true "power off" use `off` instead of `screenOff`.
-    exec_command(screen_off_command)
-    log_d("TV screen was turned off with command `"..screen_off_command.."`.")
+    if (event_type == hs.caffeinate.watcher.screensDidWake or
+        event_type == hs.caffeinate.watcher.systemDidWake or
+        event_type == hs.caffeinate.watcher.screensDidUnlock) then
+
+      if not tv_is_connected() then
+        log_d("TV was not turned on because it is not connected")
+        return
+      end
+      
+      if screen_off_command == 'screenOff' then
+        exec_command("screenOn") -- turn on screen
+      else
+        exec_command("on") -- wake on lan
+      end
+      log_d("TV was turned on")
+
+      if lgtv_current_app_id() ~= app_id and switch_input_on_wake then
+        exec_command("startApp "..app_id)
+        log_d("TV input switched to "..app_id)
+      end
+    end
+
+    -- hs.caffeinate.watcher.screensDidLock will fail for tv_is_connected
+    if (event_type == hs.caffeinate.watcher.screensDidSleep or 
+        event_type == hs.caffeinate.watcher.systemWillPowerOff or 
+        event_type == hs.caffeinate.watcher.systemWillSleep) then
+      if not tv_is_connected() then
+        log_d("TV was not turned off because it is not connected")
+        return
+      end
+      -- current_app_id returns empty string on some events like screensDidSleep
+      current_app_id = lgtv_current_app_id()
+      if current_app_id ~= app_id and prevent_sleep_when_using_other_input then
+      -- if current_app_id ~= app_id and current_app_id ~= "" and prevent_sleep_when_using_other_input then
+        log_d("TV is currently on another input ("..(current_app_id or "?").."). Skipping powering off.")
+        return
+      else
+        -- This puts the TV in standby mode.
+        -- For true "power off" use `off` instead of `screenOff`.
+        exec_command(screen_off_command)
+        log_d("TV screen was turned off with command `"..screen_off_command.."`.")
+      end
+    else 
+      log_d("Event ignored")
+    end
   end
-end)
+)
 watcher:start()
