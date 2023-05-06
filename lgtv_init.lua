@@ -33,8 +33,6 @@ function lgtv_current_app_id()
 end
 
 function tv_is_connected()
-  -- log_d("connected_tv_identifiers: "..connected_tv_identifiers)
-  -- log_d("Executing command: "..command)
   for i, v in ipairs(connected_tv_identifiers) do
     log_d("i: "..i)
     log_d("v: "..v)
@@ -177,23 +175,21 @@ watcher = hs.caffeinate.watcher.new(
       end
     end
 
-    -- hs.caffeinate.watcher.screensDidLock will fail for tv_is_connected
     if (event_type == hs.caffeinate.watcher.screensDidSleep or 
         event_type == hs.caffeinate.watcher.systemWillPowerOff or 
         event_type == hs.caffeinate.watcher.systemWillSleep) then
+
       if not tv_is_connected() then
         log_d("TV was not turned off because it is not connected")
         return
       end
+
       -- current_app_id returns empty string on some events like screensDidSleep
       current_app_id = lgtv_current_app_id()
       if current_app_id ~= app_id and prevent_sleep_when_using_other_input then
-      -- if current_app_id ~= app_id and current_app_id ~= "" and prevent_sleep_when_using_other_input then
         log_d("TV is currently on another input ("..(current_app_id or "?").."). Skipping powering off.")
         return
       else
-        -- This puts the TV in standby mode.
-        -- For true "power off" use `off` instead of `screenOff`.
         exec_command(screen_off_command)
         log_d("TV screen was turned off with command `"..screen_off_command.."`.")
       end
