@@ -7,7 +7,7 @@ local disable_lgtv = false
 -- `disable_lgtv` in the same directory as this file, or at ~/.disable_lgtv.
 
 -- You likely will not need to change anything below this line
-local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
+local tv_name = "LGC1" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
