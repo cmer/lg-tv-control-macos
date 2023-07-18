@@ -3,6 +3,7 @@ local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
 local debug = false -- If you run into issues, set to true to enable debug messages
 local disable_lgtv = false
+local disable_audio_control = false -- Ignore volume and mute button events for controlling TV audio
 -- NOTE: You can disable this script by setting the above variable to true, or by creating a file named
 -- `disable_lgtv` in the same directory as this file, or at ~/.disable_lgtv.
 
@@ -41,6 +42,20 @@ function tv_is_connected()
   end
 
   log_d("No screens are connected")
+  return false
+end
+
+function tv_is_current_audio_device()
+  local current_audio_device = hs.audiodevice.current().name
+
+  for i, v in ipairs(connected_tv_identifiers) do
+    if current_audio_device == v then
+      log_d(v.." is the current audio device")
+      return true
+    end
+  end
+
+  log_d(current_audio_device.." is the current audio device.")
   return false
 end
 
@@ -196,4 +211,31 @@ watcher = hs.caffeinate.watcher.new(
     end
   end
 )
+
+tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown, hs.eventtap.event.types.systemDefined }, function(event)
+  local event_type = event:getType()
+  if event_type ~= hs.eventtap.event.types.systemDefined or not tv_is_current_audio_device() then
+    return
+  end
+
+  local system_key = event:systemKey()
+
+  local keys_to_commands = {['SOUND_UP']="volumeUp", ['SOUND_DOWN']="volumeDown"}
+  local pressed_key = system_key.key
+
+  if system_key.down and (pressed_key == 'MUTE' or keys_to_commands[pressed_key] ~= nil) then
+    if pressed_key == 'MUTE' then
+      local audio_status = hs.json.decode(exec_command("audioStatus"):gmatch('%b{}')())
+      local mute_status = audio_status["payload"]["mute"]
+      exec_command("mute "..tostring(not mute_status))
+    else
+      exec_command(keys_to_commands[pressed_key])
+    end
+  end
+end)
+
 watcher:start()
+
+if not disable_audio_control then
+  tap:start()
+end
