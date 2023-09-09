@@ -71,7 +71,7 @@ touch ~/.hammerspoon/init.lua
 echo "require \"lgtv_init\"" >> ~/.hammerspoon/init.lua
 ```
 
-3. Change the HDMI input at the top of the Lua script, if needed.
+4. Change the HDMI input at the top of the Lua script, if needed.
 
 ## Special Thanks
 
