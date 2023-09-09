@@ -61,8 +61,9 @@ If everything is working as expected, your screen should turn off.
 
 ## Installing the Hammerspoon script
 
-1. Copy `lgtv_init.lua`from this repo to `~/.hammerspoon`
-2. Run the following
+1. Install and run [Hammerspoon](https://github.com/Hammerspoon/hammerspoon)
+2. Copy `lgtv_init.lua`from this repo to `~/.hammerspoon`
+3. Run the following
 
 ```sh
 mkdir -p ~/.hammerspoon
