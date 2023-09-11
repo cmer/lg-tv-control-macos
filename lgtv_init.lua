@@ -40,7 +40,7 @@ function tv_is_connected()
     end
   end
 
-  log_d("No screens are connected")
+  log_d("No screens are connected. Please check the 'connected_tv_identifier' in the 'lgtv_init.lua' script matches your connected screen.")
   return false
 end
 
