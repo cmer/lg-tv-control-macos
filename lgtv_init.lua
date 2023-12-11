@@ -1,3 +1,7 @@
+--
+-- Tested with LGWebOSRemote as of December 11, 2023. Make sure you're on the right version!
+--
+
 local tv_input = "HDMI_1" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
@@ -11,9 +15,8 @@ local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
-local lgtv_cmd = lgtv_path.." "..tv_name
+local lgtv_cmd = lgtv_path.." --ssl --name "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
-local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LGWebOSRemote version 2023-01-27 or newer.
 
 function lgtv_current_app_id()
   local foreground_app_info = exec_command("getForegroundAppInfo")
@@ -51,10 +54,6 @@ function dump_table(o)
 end
 
 function exec_command(command)
-  if lgtv_ssl then
-    command = command.." ssl"
-  end
-
   command = lgtv_cmd.." "..command
 
   if debug then
@@ -73,7 +72,6 @@ if debug then
   print ("TV input: "..tv_input)
   print ("LGTV path: "..lgtv_path)
   print ("LGTV command: "..lgtv_cmd)
-  print ("SSL: "..tostring(lgtv_ssl))
   print ("App ID: "..app_id)
   print("lgtv_disabled: "..tostring(lgtv_disabled()))
   if not lgtv_disabled() then
