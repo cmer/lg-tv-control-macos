@@ -5,7 +5,7 @@
 local tv_input = "HDMI_1" -- Input to which your Mac is connected
 local switch_input_on_wake = true -- Switch input to Mac when waking the TV
 local prevent_sleep_when_using_other_input = true -- Prevent sleep when TV is set to other input (ie: you're watching Netflix and your Mac goes to sleep)
-local debug = true  -- If you run into issues, set to true to enable debug messages
+local debug = false  -- If you run into issues, set to true to enable debug messages
 local control_audio = true -- Control TV volume and mute button events from keyboard
 local disable_lgtv = false
 -- NOTE: You can disable this script by setting the above variable to true, or by creating a file named
