@@ -23,6 +23,19 @@ function lgtv_log_d(message)
   if debug then print(message) end
 end
 
+
+-- Source: https://stackoverflow.com/a/4991602
+function lgtv_file_exists(name)
+  local f=io.open(name,"r")
+  if f~=nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+end
+
+
 function lgtv_current_app_id()
   local foreground_app_info = lgtv_exec_command("getForegroundAppInfo")
   for w in foreground_app_info:gmatch('%b{}') do
@@ -65,7 +78,7 @@ function lgtv_exec_command(command)
 end
 
 function lgtv_disabled()
-  return file_exists("./disable_lgtv") or file_exists(os.getenv('HOME') .. "/.disable_lgtv")
+  return lgtv_file_exists("./disable_lgtv") or lgtv_file_exists(os.getenv('HOME') .. "/.disable_lgtv")
 end
 
 function lgtv_is_current_audio_device()
