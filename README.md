@@ -8,7 +8,7 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 - [Hammerspoon](https://www.hammerspoon.org/)
 - Python 3
-- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-01-27 or newer)
+- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
 
 ### Installing Requirements
 
