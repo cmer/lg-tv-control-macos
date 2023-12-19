@@ -24,7 +24,7 @@ brew install --cask hammerspoon
 
 ```sh
 # You can skip this if you already have Python installed and know what you're doing.
-brew install python
+brew install python@3.8
 pip install pipx
 
 # Then install LGWebRemote...
