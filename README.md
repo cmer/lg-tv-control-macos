@@ -7,7 +7,7 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 ## Requirements
 
 - [Hammerspoon](https://www.hammerspoon.org/)
-- Python 3
+- Python 3.11
 - [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
 
 ### Installing Requirements
@@ -24,7 +24,7 @@ brew install --cask hammerspoon
 
 ```sh
 # You can skip this if you already have Python installed and know what you're doing.
-brew install python@3.8
+brew install python@3.11
 pip install pipx
 
 # Then install LGWebRemote...
