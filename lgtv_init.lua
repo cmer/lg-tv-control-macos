@@ -123,7 +123,12 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
   if (eventType == hs.caffeinate.watcher.screensDidWake or
       eventType == hs.caffeinate.watcher.systemDidWake or
       eventType == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() then
-
+    
+    if not lgtv_is_connected() then
+      lgtv_log_d("TV is disconnected")
+      return
+    end
+    
     lgtv_exec_command("on") -- wake on lan
     lgtv_exec_command("screenOn") -- turn on screen
     lgtv_log_d("TV was turned on")
