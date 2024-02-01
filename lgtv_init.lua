@@ -162,7 +162,7 @@ audio_event_tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown, hs.eventtap
 
   if system_key.down and (pressed_key == 'MUTE' or keys_to_commands[pressed_key] ~= nil) then
     if pressed_key == 'MUTE' then
-      local audio_status = hs.json.decode(exec_command("audioStatus"):gmatch('%b{}')())
+      local audio_status = hs.json.decode(lgtv_exec_command("audioStatus"):gmatch('%b{}')())
       local mute_status = audio_status["payload"]["mute"]
       lgtv_exec_command("mute "..tostring(not mute_status))
     else
