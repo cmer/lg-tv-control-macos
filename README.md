@@ -4,16 +4,18 @@ Automatically wake/sleep and change the input of your LG TV when used as a monit
 
 This script uses Hammerspoon to detect system events such as power off, sleep, and wake.
 
-## Requirements
+## Pre-installation Requirements
 
 - [Homebrew](https://brew.sh/)
+
+### Automatically installed requirements
 - Python 3.8.x
 - [Hammerspoon](https://www.hammerspoon.org/)
 - [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
 
 ### Installing Requirements
 
-This assumes that you already have [Homebrew](https://brew.sh) installed. If you don't, get it first.
+This assumes that you already have [Homebrew](https://brew.sh) installed. If you don't, get it first. The rest will be installed automatically by the installation script.
 
 ### Installation
 
