@@ -1,5 +1,5 @@
 --
--- Tested with LGWebOSRemote as of December 11, 2023. Make sure you're on the right version!
+-- Tested with LGWebOSRemote as of December 11, 2023.
 --
 
 local tv_input = "HDMI_1" -- Input to which your Mac is connected
@@ -15,7 +15,7 @@ local disable_lgtv = false
 local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
-local lgtv_path = "~/.local/bin/lgtv" -- Full path to lgtv executable
+local lgtv_path = "~/bin/lgtv" -- Full path to lgtv executable
 local lgtv_cmd = lgtv_path.." --ssl --name "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
 

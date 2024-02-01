@@ -6,35 +6,32 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 ## Requirements
 
+- [Homebrew](https://brew.sh/)
+- Python 3.8.x
 - [Hammerspoon](https://www.hammerspoon.org/)
-- Python 3.11
 - [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
 
 ### Installing Requirements
 
 This assumes that you already have [Homebrew](https://brew.sh) installed. If you don't, get it first.
 
-## Installing Hammerspoon
+### Installation
 
-```sh
-brew install --cask hammerspoon
+Use the installation script for a simple and convenient installation process. The script will install [Mise](https://mise.jdx.dev/), Python 3.8.18, [Hammerspoon](https://www.hammerspoon.org/) and [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote).
+
+Run the following commands in Terminal:
+
+```bash
+cd /tmp
+git clone https://github.com/cmer/lg-tv-control-macos.git
+cd lg-tv-control-macos
+./install.sh
 ```
 
-### Installing Python & LGWebOSRemote
-
-```sh
-# You can skip this if you already have Python installed and know what you're doing.
-brew install python@3.11
-pip install pipx
-
-# Then install LGWebRemote...
-pipx install git+https://github.com/klattimer/LGWebOSRemote.git
-pipx ensurepath
-```
 
 #### Removing old versions of LGWebOSRemote
 
-If you had previously installed LGWebOSRemote with pip (rather than pipx),
+If you had previously installed LGWebOSRemote with PIP,
 you can remove the old version by running:
 
 ```
@@ -46,13 +43,13 @@ rm -fr ~/opt/lgtv
 By now, you should be able to run
 
 ```sh
-lgtv scan ssl
+~/bin/lgtv scan ssl
 ```
 
 and see some info about your TV. Grab your TV's IP address from the output. Then:
 
 ```sh
-lgtv auth <ip_address_here> MyTV --ssl
+~/bin/lgtv auth <ip_address_here> MyTV --ssl
 ```
 
 and follow the instructions on your TV.
@@ -60,24 +57,13 @@ and follow the instructions on your TV.
 Now, try the following:
 
 ```sh
-lgtv --name MyTV --ssl swInfo
-lgtv --name MyTV --ssl screenOff
+~/bin/lgtv --name MyTV --ssl swInfo
+~/bin/lgtv --name MyTV --ssl screenOff
 ```
 
 If everything is working as expected, your screen should turn off.
 
-## Installing the Hammerspoon script
-
-1. Copy `lgtv_init.lua`from this repo to `~/.hammerspoon`
-2. Run the following
-
-```sh
-mkdir -p ~/.hammerspoon
-touch ~/.hammerspoon/init.lua
-echo "require \"lgtv_init\"" >> ~/.hammerspoon/init.lua
-```
-
-3. Change the HDMI input at the top of the Lua script, if needed.
+Change the HDMI input at the top of `~/.hammerspoon/init_lgtv.lua` script, if needed.
 
 ## Special Thanks
 
