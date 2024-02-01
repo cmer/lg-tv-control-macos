@@ -8,18 +8,16 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 - [Homebrew](https://brew.sh/)
 
-### Automatically installed requirements
-- Python 3.8.x
-- [Hammerspoon](https://www.hammerspoon.org/)
-- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
-
-### Installing Requirements
-
-This assumes that you already have [Homebrew](https://brew.sh) installed. If you don't, get it first. The rest will be installed automatically by the installation script.
-
 ### Installation
 
-Use the installation script for a simple and convenient installation process. The script will install [Mise](https://mise.jdx.dev/), Python 3.8.18, [Hammerspoon](https://www.hammerspoon.org/) and [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote).
+Use the installation script for a simple and convenient installation process.
+
+Before proceeding, make sure you have [Homebrew](https://brew.sh) installed. All the other dependencies will be installed automatically:
+
+- [Mise](https://mise.jdx.dev/)
+- Python 3.8.18
+- [Hammerspoon](https://www.hammerspoon.org/)
+- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote).
 
 Run the following commands in Terminal:
 
