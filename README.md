@@ -63,7 +63,7 @@ Now, try the following:
 
 If everything is working as expected, your screen should turn off.
 
-Change the HDMI input at the top of `~/.hammerspoon/init_lgtv.lua` script, if needed.
+Change the HDMI input at the top of `~/.hammerspoon/lgtv_init.lua` script, if needed.
 
 ## Special Thanks
 
