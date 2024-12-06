@@ -18,6 +18,10 @@ local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn 
 local lgtv_path = "~/bin/lgtv" -- Full path to lgtv executable
 local lgtv_cmd = lgtv_path.." --ssl --name "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
+local before_sleep_command = nil -- A shell command to run before the TV goes to sleep.
+local after_sleep_command = nil -- A shell command to run after the TV goes to sleep.
+local before_wake_command = nil -- A shell command to run before the TV wakes up.
+local after_wake_command = nil -- A shell command to run after the TV wakes up.
 
 function lgtv_log_d(message)
   if debug then print(message) end
@@ -124,6 +128,11 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
       eventType == hs.caffeinate.watcher.systemDidWake or
       eventType == hs.caffeinate.watcher.screensDidUnlock) and not lgtv_disabled() and lgtv_is_connected() then
 
+    if before_wake_command then
+      hs.execute(before_wake_command)
+      lgtv_log_d("Before wake command executed: "..before_wake_command)
+    end
+
     lgtv_exec_command("on") -- wake on lan
     lgtv_exec_command("screenOn") -- turn on screen
     lgtv_log_d("TV was turned on")
@@ -131,6 +140,11 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
     if lgtv_current_app_id() ~= app_id and switch_input_on_wake then
       lgtv_exec_command("startApp "..app_id)
       lgtv_log_d("TV input switched to "..app_id)
+    end
+
+    if after_wake_command then
+      hs.execute(after_wake_command)
+      lgtv_log_d("After wake command executed: "..after_wake_command)
     end
   end
 
@@ -142,10 +156,20 @@ watcher = hs.caffeinate.watcher.new(function(eventType)
       return
     end
 
+    if before_sleep_command then
+      hs.execute(before_sleep_command)
+      lgtv_log_d("Before sleep command executed: "..before_sleep_command)
+    end
+
     -- This puts the TV in standby mode.
     -- For true "power off" use `off` instead of `screenOff`.
     lgtv_exec_command(screen_off_command)
     lgtv_log_d("TV screen was turned off with command `"..screen_off_command.."`.")
+
+    if after_sleep_command then
+      hs.execute(after_sleep_command)
+      lgtv_log_d("After sleep command executed: "..after_sleep_command)
+    end
   end
 end)
 
