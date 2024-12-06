@@ -4,6 +4,10 @@ Automatically wake/sleep and change the input of your LG TV when used as a monit
 
 This script uses Hammerspoon to detect system events such as power off, sleep, and wake.
 
+## Pro-tip
+
+For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+
 ## Pre-installation Requirements
 
 - [Homebrew](https://brew.sh/)
