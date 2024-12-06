@@ -10,6 +10,15 @@ if [[ " $* " =~ " --help " ]]; then
   exit 0
 fi
 
+# Add Homebrew to PATH if it's installed, but not already in PATH
+if ! command -v brew &> /dev/null; then
+  if [ -x /opt/homebrew/bin/brew ]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+  elif [ -x /usr/local/bin/brew ]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+fi
+
 if [[ ! " $* " =~ " --skip-homebrew " ]]; then
   if ! command -v brew &> /dev/null
   then
