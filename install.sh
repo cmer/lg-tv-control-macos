@@ -95,21 +95,25 @@ fi
 # Get MAC address of TV
 echo -e "\033[32m\nGetting TV MAC address...\033[0m"
 ping -c 1 $TV_IP > /dev/null 2>&1
-MAC_ADDRESS=$(arp -n $TV_IP | awk -F 'at ' '{print $2}' | awk '{print $1}')
+MAC_ADDRESS=$(arp -n $TV_IP | tail -n1 | awk '{print $4}' | awk '{print toupper($0)}')
 
-if [ -n "$MAC_ADDRESS" ]; then
-    echo "TV MAC Address: $MAC_ADDRESS"
-else
-    echo -e "\033[1;33mWarning: Could not determine TV MAC address\033[0m"
+if ! [ -n "$MAC_ADDRESS" ] || ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{2}:){5}[0-9A-F]{2}$ ]]; then
+    echo -e "\033[1;33mWarning: Could not determine TV MAC address or format is invalid\033[0m"
+    echo -e "\n--> You can find the MAC address of your TV by running \`arp -n $TV_IP\` in a separate Terminal.\n\n"
+    echo -n "Please enter your TV's MAC address (format XX:XX:XX:XX:XX:XX): "
+    read MAC_ADDRESS
+    while ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{2}:){5}[0-9A-F]{2}$ ]]; do
+        echo -e "\033[1;31mInvalid MAC address format. Please use format XX:XX:XX:XX:XX:XX\033[0m"
+        echo -n "Please enter your TV's MAC address: "
+        read MAC_ADDRESS
+    done
 fi
 
-
+echo "TV MAC Address: $MAC_ADDRESS"
 
 # Update TV IP and Mac Address in Hammerspoon config
 perl -pi -e "s/^local tv_ip = \"\"/local tv_ip = \"$TV_IP\"/" ~/.hammerspoon/lgtv.lua
 perl -pi -e "s/^local tv_mac_address = \"\"/local tv_mac_address = \"$MAC_ADDRESS\"/" ~/.hammerspoon/lgtv.lua
-
-
 
 
 echo -e "\033[32m\n--------------------------------------------------------------------\033[0m"
