@@ -35,5 +35,5 @@ Change the HDMI input at the top of `~/.hammerspoon/lgtv.lua` script, if needed.
 
 #### Legacy version using LGWebOSRemote
 
-This new and updated version no longer uses LGWebOSRemote, and does not require having Python installed. 🎉 It is therefore much easier to install.
+This new and updated version no longer uses LGWebOSRemote, and does not require installing Python. It is therefore much easier to get going. 🎉
 
