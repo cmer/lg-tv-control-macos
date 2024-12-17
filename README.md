@@ -14,7 +14,7 @@ For the best result, make sure you configure your TV for PC use. [This video](ht
 
 - [Homebrew](https://brew.sh/)
 
-### Installation
+## Installation
 
 Use the installation script for a simple and convenient installation process.
 
@@ -33,7 +33,7 @@ cd lg-tv-control-macos
 Change the HDMI input at the top of `~/.hammerspoon/lgtv.lua` script, if needed. Optionally, set `debug` to `true` if you are running into issues.
 
 
-#### Legacy version using LGWebOSRemote
+## Legacy version using LGWebOSRemote
 
 This new and updated version no longer uses LGWebOSRemote, and does not require installing Python. It is therefore much easier to get going. 🎉
 
