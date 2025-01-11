@@ -6,9 +6,10 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 It makes use of [`bscpylgtv`](https://github.com/chros73/bscpylgtv) to control the TV set. It is included in this repository for Apple Silicon but can easily be compiled for Intel if desired.
 
-## Pro-tip
+## Pro Tips
 
-For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+- For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+- Make sure Wake on LAN is enabled in your TV settings. Settings > Support > IP Control Settings > Wake on LAN = ENABLED.
 
 ## Pre-installation Requirements
 
