@@ -6,15 +6,16 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 
 It makes use of [`bscpylgtv`](https://github.com/chros73/bscpylgtv) to control the TV set. It is included in this repository for Apple Silicon but can easily be compiled for Intel if desired.
 
-## Pro-tip
+## Pro Tips
 
-For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+- For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+- Make sure Wake on LAN is enabled in your TV settings. Settings > Support > IP Control Settings > Wake on LAN = ENABLED.
 
 ## Pre-installation Requirements
 
 - [Homebrew](https://brew.sh/)
 
-### Installation
+## Installation
 
 Use the installation script for a simple and convenient installation process.
 
@@ -33,7 +34,7 @@ cd lg-tv-control-macos
 Change the HDMI input at the top of `~/.hammerspoon/lgtv.lua` script, if needed. Optionally, set `debug` to `true` if you are running into issues.
 
 
-#### Legacy version using LGWebOSRemote
+## Legacy version using LGWebOSRemote
 
-This new and updated version no longer uses LGWebOSRemote, and does not require having Python installed. 🎉 It is therefore much easier to install.
+This new and updated version no longer uses LGWebOSRemote, and does not require installing Python. It is therefore much easier to get going. 🎉
 

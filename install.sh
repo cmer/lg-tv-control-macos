@@ -97,12 +97,12 @@ echo -e "\033[32m\nGetting TV MAC address...\033[0m"
 ping -c 1 $TV_IP > /dev/null 2>&1
 MAC_ADDRESS=$(arp -n $TV_IP | tail -n1 | awk '{print $4}' | awk '{print toupper($0)}')
 
-if ! [ -n "$MAC_ADDRESS" ] || ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{2}:){5}[0-9A-F]{2}$ ]]; then
+if ! [ -n "$MAC_ADDRESS" ] || ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{1,2}:){5}[0-9A-F]{2}$ ]]; then
     echo -e "\033[1;33mWarning: Could not determine TV MAC address or format is invalid\033[0m"
     echo -e "\n--> You can find the MAC address of your TV by running \`arp -n $TV_IP\` in a separate Terminal.\n\n"
     echo -n "Please enter your TV's MAC address (format XX:XX:XX:XX:XX:XX): "
     read MAC_ADDRESS
-    while ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{2}:){5}[0-9A-F]{2}$ ]]; do
+    while ! [[ "$MAC_ADDRESS" =~ ^([0-9A-F]{1,2}:){5}[0-9A-F]{2}$ ]]; do
         echo -e "\033[1;31mInvalid MAC address format. Please use format XX:XX:XX:XX:XX:XX\033[0m"
         echo -n "Please enter your TV's MAC address: "
         read MAC_ADDRESS
