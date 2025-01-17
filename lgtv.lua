@@ -76,8 +76,8 @@ function lgtv_exec_command(command, strip)
   command = bin_cmd.." "..command
   lgtv_log_d("Executing command: "..command)
   local output, status, type, rc = hs.execute(command, 3)
-  if rc == nil or rc == 0 then
-    lgtv_log_d("Command timed out after 3 seconds: " .. command)
+  if status ~= true then
+    lgtv_log_d("Command timed out or failed (exit code: " .. rc .. "): " .. command)
     return ""
   end
 
