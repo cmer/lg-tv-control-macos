@@ -76,8 +76,8 @@ function lgtv_exec_command(command, strip)
   command = bin_cmd.." "..command
   lgtv_log_d("Executing command: "..command)
   local output, status, type, rc = hs.execute(command, 3)
-  if rc == nil then
-    lgtv_log_d("Command timed out after 3 seconds: " .. command)
+  if status ~= true then
+    lgtv_log_d("Command timed out or failed (exit code: " .. tostring(rc) .. "): " .. command)
     return ""
   end
 
@@ -123,7 +123,22 @@ function lgtv_log_init()
 end
 
 watcher = hs.caffeinate.watcher.new(function(eventType)
-  lgtv_log_d("Received event: "..(eventType or ""))
+  local event_names = {
+    "systemDidWake",
+    "systemWillSleep",
+    "systemWillPowerOff",
+    "screensDidSleep",
+    "screensDidWake",
+    "sessionDidResignActive",
+    "sessionDidBecomeActive",
+    "screensaverDidStart",
+    "screensaverWillStop",
+    "screensaverDidStop",
+    "screensDidLock",
+    "screensDidUnlock"
+  }
+  local event_name = eventType and event_names[eventType + 1] or "unknown"
+  lgtv_log_d("Received event: " .. tostring(eventType) .. " " .. "(" .. tostring(event_name) .. ")")
 
   if lgtv_disabled() then
     lgtv_log_d("LGTV feature disabled. Skipping.")
