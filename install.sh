@@ -112,8 +112,8 @@ fi
 echo "TV MAC Address: $MAC_ADDRESS"
 
 # Update TV IP and Mac Address in Hammerspoon config
-perl -pi -e "s/^local tv_ip = \"\"/local tv_ip = \"$TV_IP\"/" ~/.hammerspoon/lgtv.lua
-perl -pi -e "s/^local tv_mac_address = \"\"/local tv_mac_address = \"$MAC_ADDRESS\"/" ~/.hammerspoon/lgtv.lua
+perl -pi -e "s/tv_ip = \"\"/tv_ip = \"$TV_IP\"/" ~/.hammerspoon/lgtv.lua
+perl -pi -e "s/tv_mac_address = \"\"/tv_mac_address = \"$MAC_ADDRESS\"/" ~/.hammerspoon/lgtv.lua
 
 
 echo -e "\033[32m\n--------------------------------------------------------------------\033[0m"
