@@ -111,15 +111,22 @@ function LGTVController:current_app_id()
 end
 
 function LGTVController:is_current_audio_device()
-    local current_audio = hs.audiodevice.current().name
-    for _, identifier in ipairs(config.connected_tv_identifiers) do
-        if current_audio == identifier then
-            log_debug(identifier .. " is the current audio device")
-            return true
+    local current_time = os.time()
+    if not self.last_audio_device_check or current_time - self.last_audio_device_check >= 10 then
+        self.last_audio_device_check = current_time
+        self.last_audio_device = false
+
+        local current_audio = hs.audiodevice.current().name
+        for _, identifier in ipairs(config.connected_tv_identifiers) do
+            if current_audio == identifier then
+                log_debug(identifier .. " is the current audio device")
+                self.last_audio_device = true
+                break
+            end
         end
+        log_debug(current_audio .. " is the current audio device.")
     end
-    log_debug(current_audio .. " is the current audio device.")
-    return false
+    return self.last_audio_device
 end
 
 function LGTVController:get_muted()
@@ -266,16 +273,16 @@ function LGTVController:setup_watchers()
     self.audio_event_tap = hs.eventtap.new(
         {hs.eventtap.event.types.keyDown, hs.eventtap.event.types.systemDefined},
         function(event)
-            if not self:is_current_audio_device() then return end
-
             local system_key = event:systemKey()
             local key_actions = {['SOUND_UP'] = "volume_up", ['SOUND_DOWN'] = "volume_down"}
             local pressed_key = tostring(system_key.key)
 
             if system_key.down then
                 if pressed_key == 'MUTE' then
+                    if not self:is_current_audio_device() then return end
                     self:toggle_mute()
                 elseif key_actions[pressed_key] then
+                    if not self:is_current_audio_device() then return end
                     self:execute_command(key_actions[pressed_key])
                 end
             end
