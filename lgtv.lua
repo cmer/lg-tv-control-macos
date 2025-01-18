@@ -29,6 +29,11 @@ local config = {
     after_wake_command = nil,
 }
 
+if config.tv_ip == "" or config.tv_mac_address == "" then
+  print("TV IP and MAC address not set. Please set them first.")
+  return
+end
+
 -- Utility Functions
 local function log_debug(message)
     if config.debug then print(message) end
