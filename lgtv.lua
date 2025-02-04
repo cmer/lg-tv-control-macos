@@ -150,7 +150,7 @@ function LGTVController:log_init()
     log_debug("LGTV Disabled: " .. tostring(self:disabled()))
     if not self:disabled() then
         log_debug(self:execute_command("get_software_info"))
-        log_debug("Current app ID: " .. self:current_app_id())
+        log_debug("Current app ID: " .. tostring(self:current_app_id()))
         log_debug("Connected screens: " .. dump_table(hs.screen.allScreens()))
         log_debug("TV is connected? " .. tostring(self:is_connected()))
     end
