@@ -1,5 +1,7 @@
 # LG TV Control for macOS
 
+> **IMPORTANT NOTICE:** It is advised to remain on webOS 23 while we determine if webOS 24 is fully compatible. If you upgrade, you cannot roll back, so it's better to hold back for now!
+
 Automatically wake/sleep and change the input of your LG TV when used as a monitor on macOS.
 
 This script uses Hammerspoon to detect system events such as power off, sleep, and wake.
