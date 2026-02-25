@@ -78,6 +78,11 @@ echo -e "\033[32mConnecting to LG TV at $TV_IP...\033[0m"
 echo -e "\033[33mAccept the connection on the TV...\033[0m"
 echo -e "\033[33mPress CTRL-C to abort...\033[0m"
 
+# Ping TV first to wake its network interface and populate the ARP cache.
+# LG TVs in standby have a slow network response, causing "No route to host"
+# errors if the WebSocket connection is attempted before ARP resolution completes.
+ping -c 3 -W 3000 $TV_IP > /dev/null 2>&1
+
 cd ~
 bin/bscpylgtvcommand $TV_IP get_apps_all true > /dev/null 2>&1
 EXIT_CODE=$?
