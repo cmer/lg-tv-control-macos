@@ -31,7 +31,12 @@ cd lg-tv-control-macos
 ```
 
 ### Configuration
-Change the HDMI input at the top of `~/.hammerspoon/lgtv.lua` script, if needed. Optionally, set `debug` to `true` if you are running into issues.
+
+Edit `~/.hammerspoon/lgtv.lua` to customize the script's behavior:
+
+- **`tv_input`** — Set this to the HDMI port your Mac is connected to (e.g., `"HDMI_1"`, `"HDMI_2"`, `"HDMI_3"`, `"HDMI_4"`). Default is `"HDMI_1"`.
+- **`screen_off_command`** — Set to `"power_off"` to fully turn off the TV when your Mac sleeps. Default is `"screen_off"`, which only blanks the display.
+- **`debug`** — Set to `true` to enable debug logging if you are running into issues.
 
 
 ## Legacy version using LGWebOSRemote
