@@ -18,6 +18,7 @@ local config = {
     key_file_path = "~/.aiopylgtv.sqlite",
     connected_tv_identifiers = {"LG TV", "LG TV SSCR2"},
     bin_path = "~/bin/bscpylgtvcommand",
+    manifest_path = "~/bin/manifest-comp.json",
     wakeonlan_path = "~/bin/wakeonlan",
     app_id = "com.webos.app." .. ("HDMI_1"):lower():gsub("_", ""),
     set_pc_mode_on_wake = true,
@@ -58,7 +59,7 @@ end
 -- LGTVController Methods
 function LGTVController:new()
     local obj = setmetatable({}, self)
-    obj.bin_cmd = config.bin_path .. " -p " .. config.key_file_path .. " " .. config.tv_ip .. " "
+    obj.bin_cmd = config.bin_path .. " -p " .. config.key_file_path .. " -m " .. config.manifest_path .. " " .. config.tv_ip .. " "
     obj.last_wake_execution = 0
     obj.last_sleep_execution = 0
     return obj
@@ -145,6 +146,7 @@ function LGTVController:log_init()
     log_debug("\n\n-------------------- LGTV DEBUG INFO --------------------")
     log_debug("TV input: " .. config.tv_input)
     log_debug("Binary path: " .. config.bin_path)
+    log_debug("Manifest path: " .. config.manifest_path)
     log_debug("Binary command: " .. self.bin_cmd)
     log_debug("App ID: " .. config.app_id)
     log_debug("LGTV Disabled: " .. tostring(self:disabled()))

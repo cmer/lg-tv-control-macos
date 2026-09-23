@@ -60,6 +60,11 @@ if [ ! -f "./tools/dist/bscpylgtvcommand-$ARCH" ]; then
     exit 1
 fi
 
+if [ ! -f "./tools/manifest-comp.json" ]; then
+    echo -e "\033[1;31mError: webOS compatibility manifest not found at tools/manifest-comp.json.\033[0m"
+    exit 1
+fi
+
 # Remove old lgtv_init.lua if it exists
 if [ -f ~/.hammerspoon/lgtv_init.lua ]; then
     echo "Removing old version of lgtv_init.lua..."
@@ -69,6 +74,7 @@ if [ -f ~/.hammerspoon/lgtv_init.lua ]; then
 fi
 
 cp ./tools/dist/bscpylgtvcommand-$ARCH ~/bin/bscpylgtvcommand
+cp ./tools/manifest-comp.json ~/bin/manifest-comp.json
 
 # Prompt for TV IP address
 echo -n -e "\nPlease enter your LG TV's IP address: "
@@ -84,7 +90,7 @@ echo -e "\033[33mPress CTRL-C to abort...\033[0m"
 ping -c 3 -W 3000 $TV_IP > /dev/null 2>&1
 
 cd ~
-bin/bscpylgtvcommand $TV_IP get_apps_all true > /dev/null 2>&1
+bin/bscpylgtvcommand -m bin/manifest-comp.json "$TV_IP" get_apps_all true > /dev/null 2>&1
 EXIT_CODE=$?
 cd -
 
