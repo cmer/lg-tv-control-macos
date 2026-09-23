@@ -26,8 +26,9 @@ echo "Working directory: $WORK_DIR"
 python3 -m venv "$WORK_DIR/venv"
 source "$WORK_DIR/venv/bin/activate"
 
-# Install requirements
-pip install pyinstaller bscpylgtv
+# Install requirements. Keep the binary aligned with the bundled webOS 26
+# compatibility manifest.
+pip install pyinstaller bscpylgtv==0.5.4
 
 # Build
 cd "$WORK_DIR"

@@ -4,7 +4,7 @@ Automatically wake/sleep and change the input of your LG TV when used as a monit
 
 This script uses Hammerspoon to detect system events such as power off, sleep, and wake.
 
-It makes use of [`bscpylgtv`](https://github.com/chros73/bscpylgtv) to control the TV set. It is included in this repository for Apple Silicon but can easily be compiled for Intel if desired.
+It makes use of [`bscpylgtv`](https://github.com/chros73/bscpylgtv) 0.5.4 to control the TV set. It is included in this repository for Apple Silicon but can easily be compiled for Intel if desired. The installer also installs the compatibility manifest required when pairing with webOS 26 and later TVs.
 
 ## Pro Tips
 
@@ -37,6 +37,7 @@ Edit `~/.hammerspoon/lgtv.lua` to customize the script's behavior:
 - **`tv_input`** — Set this to the HDMI port your Mac is connected to (e.g., `"HDMI_1"`, `"HDMI_2"`, `"HDMI_3"`, `"HDMI_4"`). Default is `"HDMI_1"`.
 - **`screen_off_command`** — Set to `"power_off"` to fully turn off the TV when your Mac sleeps. Default is `"screen_off"`, which only blanks the display.
 - **`debug`** — Set to `true` to enable debug logging if you are running into issues.
+- **`manifest_path`** — Path to the bscpylgtv webOS compatibility manifest. The installer puts it at `~/bin/manifest-comp.json`; keep this option enabled for webOS 26 and later TVs.
 
 
 ## Legacy version using LGWebOSRemote
